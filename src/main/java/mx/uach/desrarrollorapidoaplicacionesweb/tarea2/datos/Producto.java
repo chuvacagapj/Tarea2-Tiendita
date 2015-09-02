@@ -6,6 +6,9 @@
 
 package mx.uach.desrarrollorapidoaplicacionesweb.tarea2.datos;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * @author jesus
@@ -24,6 +27,8 @@ public class Producto {
     private Integer existencias;
     private Integer existenciaMenor;
     private Integer existenciaMayor;
+    
+    public Producto(){}
 
     public Producto(Integer id, String decripcion, Float precio, 
             String clasificacion, Integer existencias, Integer existenciaMenor,
@@ -88,7 +93,7 @@ public class Producto {
     }
 
     /**
-     * @param clacificacion the clacificacion to set
+     * @param clasificacion the clacificacion to set
      */
     public void setClasificacion(String clasificacion) {
         this.clasificacion = clasificacion;
@@ -115,9 +120,9 @@ public class Producto {
             columnas = String.format("%s, %s", columnas, string);
         }
         
-        return columnas.replaceFirst(", ", columnas);
+        return columnas.replaceFirst(", ", "");
     }
-
+    
     /**
      * @return the existenciaMenor
      */
@@ -146,5 +151,10 @@ public class Producto {
         this.existenciaMayor = existenciaMayor;
     }
     
+    public String toString(){
+        return String.format("%s %s %s %s %s %s %s", this.id, this.decripcion, 
+                this.precio, this.clasificacion, this.existencias, 
+                this.existenciaMayor, this.existenciaMenor);
+    }
     
 }

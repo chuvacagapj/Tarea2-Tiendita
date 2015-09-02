@@ -6,6 +6,8 @@
 
 package mx.uach.desrarrollorapidoaplicacionesweb.tarea2.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -32,9 +34,9 @@ public class ProductoDAO implements Crud <Producto>{
             
             while (rs.next()) {
                 Integer id = rs.getInt(Producto.FIELD[0]);
-                String decripcion = rs.getNString(Producto.FIELD[1]);
+                String decripcion = rs.getString(Producto.FIELD[1]);
                 Float precio = rs.getFloat(Producto.FIELD[2]);
-                String clasificacion = rs.getNString(Producto.FIELD[3]);
+                String clasificacion = rs.getString(Producto.FIELD[3]);
                 Integer existencias = rs.getInt(Producto.FIELD[4]);
                 Integer existenciaMenor = rs.getInt(Producto.FIELD[5]);
                 Integer existenciaMayor = rs.getInt(Producto.FIELD[6]);
@@ -51,8 +53,27 @@ public class ProductoDAO implements Crud <Producto>{
     }
 
     @Override
-    public void create(Producto t) {
-        
+    public void create(Producto t) throws IllegalArgumentException{
+        if (!(t.getId() == null)) {
+            throw new IllegalArgumentException("El producto ya existe en la BD");
+        }
+        try{
+            Connection conexion = Conexion.getInstance().getConexion();
+            PreparedStatement st = conexion.prepareStatement(String.format
+        ("INSERT INTO %s ( %s ) VALUES ( \"%s\" , %s , \"%s\" , %s , %s , %s );", Producto.TABLE, 
+                Producto.fieldsToString().replaceFirst("id, ", ""), t.getDecripcion(), t.getPrecio(), 
+                t.getClasificacion(), t.getExistencias(), 
+                t.getExistenciaMayor(), t.getExistenciaMenor()), 
+                            PreparedStatement.RETURN_GENERATED_KEYS);
+            
+            st.executeUpdate();
+            ResultSet rs = st.getGeneratedKeys();
+            
+            rs.next();
+            t.setId(rs.getInt(1));
+        }catch (SQLException ex) {
+            Logger.getLogger(ProductoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

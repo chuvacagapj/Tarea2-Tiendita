@@ -37,6 +37,7 @@ public class Conexion {
             try {
                 Class.forName(driver);
                 Connection con = DriverManager.getConnection(cadenaConexion);
+                connection = con;
             } catch (ClassNotFoundException | SQLException ex) {
                 Logger.getLogger(Conexion.class.getName())
                         .log(Level.SEVERE, null, ex);
